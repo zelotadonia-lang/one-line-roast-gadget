@@ -22,6 +22,12 @@ def main():
     os.makedirs("/output", exist_ok=True)
     with open("/output/entry.txt", "w", encoding="utf-8", newline="") as f:
         f.write(LINE)
+    # Read back what landed on disk and prove it is exactly the line the
+    # judge will read: same bytes, still one line, still within the gate.
+    with open("/output/entry.txt", "rb") as f:
+        raw = f.read()
+    assert raw == LINE.encode("utf-8"), "entry.txt on disk differs from LINE"
+    assert raw.count(b"\n") == 0, "entry.txt must hold exactly one line"
 
 
 if __name__ == "__main__":
